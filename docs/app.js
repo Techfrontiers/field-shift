@@ -3,9 +3,13 @@
   "use strict";
 
   var DATA = window.FIELDSHIFT_DATA;
+  var ENGINE = window.FIELDSHIFT_ENGINE;
   var state = {
     lang: "th",
-    climateMode: "2024" // "2024" | "clim"
+    climateMode: "2024", // "2024" | "clim"
+    activePreset: "balanced",
+    weights: { yield: 3, water: 3, income: 3, soil: 3, risk: 3 },
+    previousWeights: null
   };
 
   var UI = {
@@ -59,6 +63,22 @@
       s2NoScoreNote: "หมายเหตุ: หน้านี้ไม่แสดง \"คะแนนรวม\" หรือบอกว่าทางไหนดีที่สุด เพราะคำว่าดีกว่าขึ้นกับความสำคัญของชาวนาแต่ละแปลง (ไปกำหนดในส่วนที่ 3 ด้านล่าง)",
       badgeOfficial: "ข้อมูลราชการ/วิชาการ",
       badgeEstimate: "ค่าประมาณ/สมมติฐาน",
+      s3Title: "3. คุณให้ความสำคัญเรื่องไหนมากที่สุด? (Slice 3)",
+      s3Desc: "เลื่อนน้ำหนัก 1–5 ตามความจำเป็นจริงของแปลงคุณ หรือกดปุ่มสถานการณ์จำลองด้านล่างเพื่อดูอันดับและเหตุผลทันที",
+      s3PresetsLabel: "สถานการณ์ตัวอย่าง (กดเลือกเร็ว):",
+      s3SlidersHeading: "ปรับน้ำหนักความสำคัญของแปลงคุณ (1 = น้อยสุด, 5 = สำคัญสุด)",
+      s3ScaleLow: "สำคัญน้อย (1)",
+      s3ScaleHigh: "สำคัญมาก (5)",
+      s3ResultHeading: "อันดับกลยุทธ์ที่เข้ากับน้ำหนักของคุณ",
+      s3WinnerTag: "อันดับ 1 ตามน้ำหนักนี้",
+      s3TiedTag: "คะแนนสูสีเท่ากัน",
+      s3ReasonHeading: "เหตุผลจากข้อมูลแปลงจริง:",
+      s3FlipHeading: "ถ้าเปลี่ยนใจ — ปรับเรื่องเดียว อันดับก็เปลี่ยนได้",
+      s3FlipApply: "ลองใช้น้ำหนักนี้",
+      s3Undo: "ย้อนกลับค่าน้ำหนักก่อนหน้า",
+      s3NoFlip: "น้ำหนักตอนนี้ทำให้อันดับ 1 นำค่อนข้างขาด — ลองกดปุ่มตัวอย่างด้านบนเพื่อเทียบมุมมองอื่น",
+      s3FinalWarnTitle: "คำเตือนสำคัญ (ชาวนาตัดสินใจเอง):",
+      s3FinalWarnBody: "การจัดอันดับนี้เป็นการเปรียบเทียบเชิงเงื่อนไขจากข้อมูลประวัติศาสตร์ NASA POWER และค่าประมาณทางวิชาการ ไม่ใช่คำแนะนำที่รับประกันผลผลิต — ชาวนาเป็นผู้ตัดสินใจขั้นสุดท้ายโดยดูน้ำคลองและสภาพดินในแปลงจริงประกอบ",
       footer: "FieldShift · NASA Space Apps Challenge 2026 (Challenge 7: Field Shift) · ข้อมูลฝังในหน้าเว็บ ไม่เรียก API ภายนอกตอนใช้งาน"
     },
     en: {
@@ -111,6 +131,22 @@
       s2NoScoreNote: "No composite score is shown here: what counts as \"better\" depends on each farmer's own priorities in Section 3 below.",
       badgeOfficial: "Official / Research",
       badgeEstimate: "Estimate / Assumption",
+      s3Title: "3. Set Your Farm Priorities (Slice 3)",
+      s3Desc: "Adjust weights (1–5) to match your field conditions or tap a farmer scenario preset to see live rankings and plain-language reasons.",
+      s3PresetsLabel: "Quick farmer scenarios:",
+      s3SlidersHeading: "Weight each priority (1 = lowest, 5 = highest)",
+      s3ScaleLow: "Low (1)",
+      s3ScaleHigh: "High (5)",
+      s3ResultHeading: "Ranked Strategies for Your Priorities",
+      s3WinnerTag: "#1 Match",
+      s3TiedTag: "Tied Top Match",
+      s3ReasonHeading: "Why (anchored to field data):",
+      s3FlipHeading: "What if I change my mind? (Sensitivity flips)",
+      s3FlipApply: "Try this weight",
+      s3Undo: "Undo last change",
+      s3NoFlip: "Your current #1 leads clearly across single-slider shifts — try a preset above to explore other trade-offs.",
+      s3FinalWarnTitle: "Farmer has the final say:",
+      s3FinalWarnBody: "This ranking is a conditional historical comparison using NASA POWER & published estimates — NEVER a yield guarantee. The farmer makes the final decision based on actual canal water and field moisture.",
       footer: "FieldShift · NASA Space Apps Challenge 2026 (Challenge 7: Field Shift) · Static offline-first web app with embedded datasets"
     }
   };
@@ -580,15 +616,199 @@
     '</section>';
   }
 
-  function renderSlice3Placeholder() {
-    return state.lang === "th"
-      ? '<section class="section-card" id="slice-3"><h2>3. เลือกความสำคัญของชาวนา (กำลังสร้างใน Slice 3)</h2><p class="section-desc">จัดอันดับตามน้ำหนักความต้องการ + คำอธิบายและโหมดถ้าเปลี่ยนใจ</p></section>'
-      : '<section class="section-card" id="slice-3"><h2>3. Farmer Priorities (Slice 3 pending)</h2><p class="section-desc">Interactive sliders, ranking explanation, and sensitivity view.</p></section>';
+  function renderSlice3ResultsHtml() {
+    var isTh = state.lang === "th";
+    var res = ENGINE.rankStrategies(state.weights, DATA);
+    var flipsInfo = ENGINE.findSingleSliderFlips(state.weights, DATA);
+
+    var cardsHtml = res.ranked.map(function (item, idx) {
+      var st = item.strategy;
+      var title = isTh ? st.titleTh : st.titleEn;
+      var isFirst = idx === 0;
+      var tagHtml = isFirst
+        ? '<span class="badge ' + (res.isTied ? "badge-estimate" : "badge-official") + '">' + esc(res.isTied ? t("s3TiedTag") : t("s3WinnerTag")) + '</span>'
+        : '';
+      var breakdownParts = DATA.dimensions.map(function (d) {
+        var b = item.breakdown[d.id];
+        var dShort = (isTh ? d.th : d.en).replace(/^\d+\.\s*/, "");
+        return esc(dShort) + " (" + b.score + "×" + b.weight + ")";
+      }).join(" · ");
+
+      return '<div class="rank-card ' + (isFirst ? "is-winner" : "") + '">' +
+        '<div class="rank-top">' +
+          '<div class="rank-title">#' + (idx + 1) + " " + esc(title) + " " + tagHtml + '</div>' +
+          '<div class="rank-score">' + item.score.toFixed(2) + ' / 5.0 (' + item.pct + '%)</div>' +
+        '</div>' +
+        '<div class="rank-bar-track"><div class="rank-bar-fill" style="width:' + item.pct + '%;background:' + st.color + ';"></div></div>' +
+        '<div class="rank-math">' + breakdownParts + '</div>' +
+      '</div>';
+    }).join("");
+
+    var reasonHtml = '<div class="reason-box">' +
+      '<strong>' + esc(t("s3ReasonHeading")) + '</strong> ' +
+      esc(isTh ? res.reasonTh : res.reasonEn) +
+    '</div>';
+
+    var flipRowsHtml = "";
+    if (flipsInfo.singleSliderFlips.length > 0) {
+      flipRowsHtml = flipsInfo.singleSliderFlips.map(function (fl, fIdx) {
+        var dimLbl = isTh ? fl.dimTh : fl.dimEn;
+        var msg = isTh
+          ? 'ถ้าเปลี่ยน "' + dimLbl + '" จาก ' + fl.fromVal + ' → ' + fl.toVal + ' อันดับ 1 จะเปลี่ยนจาก ' + fl.fromWinner + ' → ' + fl.toWinner
+          : 'If "' + dimLbl + '" shifts from ' + fl.fromVal + ' → ' + fl.toVal + ', #1 flips from ' + fl.fromWinner + ' → ' + fl.toWinner;
+        return '<div class="flip-row">' +
+          '<span>' + esc(msg) + '</span>' +
+          '<button type="button" class="btn-small" data-flip-idx="' + fIdx + '">' + esc(t("s3FlipApply")) + '</button>' +
+        '</div>';
+      }).join("");
+    } else {
+      flipRowsHtml = '<div class="section-desc">' + esc(t("s3NoFlip")) + '</div>';
+    }
+
+    var undoBtnHtml = state.previousWeights
+      ? '<div style="margin-top:10px;"><button type="button" class="btn-small" id="s3-undo-btn">' + esc(t("s3Undo")) + '</button></div>'
+      : "";
+
+    var flipBoxHtml = '<div class="flip-box">' +
+      '<h3>' + esc(t("s3FlipHeading")) + '</h3>' +
+      '<div class="flip-list">' + flipRowsHtml + '</div>' +
+      undoBtnHtml +
+    '</div>';
+
+    return '<h3 style="margin:0 0 10px;font-size:1rem;">' + esc(t("s3ResultHeading")) + '</h3>' +
+      '<div class="rank-list">' + cardsHtml + '</div>' +
+      reasonHtml +
+      flipBoxHtml;
+  }
+
+  function renderSlice3() {
+    var isTh = state.lang === "th";
+    var presetsHtml = '<div class="preset-row">' + ENGINE.PRESETS.map(function (p) {
+      var active = state.activePreset === p.id ? "active" : "";
+      return '<button type="button" class="btn-action ' + active + '" data-preset="' + p.id + '">' +
+        esc(isTh ? p.labelTh : p.labelEn) +
+      '</button>';
+    }).join("") + '</div>';
+
+    var slidersHtml = DATA.dimensions.map(function (d) {
+      var val = state.weights[d.id];
+      var lbl = isTh ? d.th : d.en;
+      return '<div class="slider-item">' +
+        '<div class="slider-head">' +
+          '<label for="slider-' + d.id + '">' + esc(lbl) + '</label>' +
+          '<span class="weight-pill" id="pill-' + d.id + '">' + val + ' / 5</span>' +
+        '</div>' +
+        '<input type="range" class="priority-slider" id="slider-' + d.id + '" data-dim="' + d.id + '" min="1" max="5" step="1" value="' + val + '">' +
+        '<div class="slider-scale"><span>' + esc(t("s3ScaleLow")) + '</span><span>' + esc(t("s3ScaleHigh")) + '</span></div>' +
+      '</div>';
+    }).join("");
+
+    return '<section class="section-card" id="slice-3">' +
+      '<div class="section-head">' +
+        '<div>' +
+          '<h2>' + esc(t("s3Title")) + '</h2>' +
+          '<p class="section-desc">' + esc(t("s3Desc")) + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:0.9rem;font-weight:700;margin-bottom:8px;">' + esc(t("s3PresetsLabel")) + '</div>' +
+      presetsHtml +
+      '<div class="s3-layout">' +
+        '<div class="sliders-panel">' +
+          '<h3 style="margin:0 0 8px;font-size:0.98rem;">' + esc(t("s3SlidersHeading")) + '</h3>' +
+          slidersHtml +
+        '</div>' +
+        '<div id="s3-results">' + renderSlice3ResultsHtml() + '</div>' +
+      '</div>' +
+      '<div class="callout callout-warn" style="margin-top:16px;">' +
+        '<strong>' + esc(t("s3FinalWarnTitle")) + '</strong> ' + esc(t("s3FinalWarnBody")) +
+      '</div>' +
+    '</section>';
+  }
+
+  function syncSliderInputsFromState() {
+    DATA.dimensions.forEach(function (d) {
+      var val = state.weights[d.id];
+      var input = document.getElementById("slider-" + d.id);
+      var pill = document.getElementById("pill-" + d.id);
+      if (input) input.value = String(val);
+      if (pill) pill.textContent = val + " / 5";
+    });
+    document.querySelectorAll("[data-preset]").forEach(function (btn) {
+      var pid = btn.getAttribute("data-preset");
+      btn.classList.toggle("active", pid === state.activePreset);
+    });
+  }
+
+  function updateSlice3ResultsOnly() {
+    var box = document.getElementById("s3-results");
+    if (!box) return;
+    box.innerHTML = renderSlice3ResultsHtml();
+    wireSlice3ResultButtons();
+  }
+
+  function wireSlice3ResultButtons() {
+    var flipsInfo = ENGINE.findSingleSliderFlips(state.weights, DATA);
+    document.querySelectorAll("[data-flip-idx]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var idx = Number(btn.getAttribute("data-flip-idx"));
+        var flip = flipsInfo.singleSliderFlips[idx];
+        if (!flip) return;
+        state.previousWeights = Object.assign({}, state.weights);
+        state.weights = Object.assign({}, flip.newWeights);
+        state.activePreset = null;
+        syncSliderInputsFromState();
+        updateSlice3ResultsOnly();
+      });
+    });
+
+    var undoBtn = document.getElementById("s3-undo-btn");
+    if (undoBtn) {
+      undoBtn.addEventListener("click", function () {
+        if (!state.previousWeights) return;
+        state.weights = Object.assign({}, state.previousWeights);
+        state.previousWeights = null;
+        state.activePreset = null;
+        syncSliderInputsFromState();
+        updateSlice3ResultsOnly();
+      });
+    }
+  }
+
+  function wireSlice3Events() {
+    document.querySelectorAll(".priority-slider").forEach(function (slider) {
+      slider.addEventListener("input", function () {
+        var dim = slider.getAttribute("data-dim");
+        var val = Number(slider.value);
+        state.weights[dim] = val;
+        state.activePreset = null;
+        var pill = document.getElementById("pill-" + dim);
+        if (pill) pill.textContent = val + " / 5";
+        document.querySelectorAll("[data-preset]").forEach(function (btn) {
+          btn.classList.remove("active");
+        });
+        updateSlice3ResultsOnly();
+      });
+    });
+
+    document.querySelectorAll("[data-preset]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var pid = btn.getAttribute("data-preset");
+        var preset = ENGINE.PRESETS.find(function (p) { return p.id === pid; });
+        if (!preset) return;
+        state.previousWeights = Object.assign({}, state.weights);
+        state.weights = Object.assign({}, preset.weights);
+        state.activePreset = pid;
+        syncSliderInputsFromState();
+        updateSlice3ResultsOnly();
+      });
+    });
+
+    wireSlice3ResultButtons();
   }
 
   function renderAll() {
     renderTopbar();
-    document.getElementById("app").innerHTML = renderSlice1() + renderSlice2() + renderSlice3Placeholder();
+    document.getElementById("app").innerHTML = renderSlice1() + renderSlice2() + renderSlice3();
     document.getElementById("site-footer").textContent = t("footer");
 
     var cmodeBtns = document.querySelectorAll("[data-cmode]");
@@ -598,6 +818,8 @@
         renderAll();
       });
     });
+
+    wireSlice3Events();
   }
 
   renderAll();
