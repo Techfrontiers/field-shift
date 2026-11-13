@@ -507,3 +507,185 @@ main.container {
   color: var(--teal);
   font-weight: 600;
 }
+
+.strat-banner-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 760px) {
+  .strat-banner-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.strat-chip-card {
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--strat-a);
+  padding: 12px;
+  background: var(--surface-alt);
+}
+
+.strat-chip-card[data-strat="B"] {
+  border-top-color: var(--strat-b);
+  background: var(--strat-b-bg);
+}
+
+.strat-chip-card[data-strat="C"] {
+  border-top-color: var(--strat-c);
+  background: var(--strat-c-bg);
+}
+
+.strat-chip-card h3 {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+}
+
+.strat-chip-card p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+}
+
+/* Desktop Matrix Table vs Mobile Matrix Cards */
+.matrix-table-wrap {
+  display: none;
+}
+
+.matrix-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 760px) {
+  .matrix-table-wrap {
+    display: block;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .matrix-cards {
+    display: none;
+  }
+}
+
+table.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+table.matrix-table th,
+table.matrix-table td {
+  border: 1px solid var(--line);
+  padding: 11px 12px;
+  vertical-align: top;
+  text-align: left;
+}
+
+table.matrix-table thead th {
+  background: #f1f5f3;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+table.matrix-table th.col-dim {
+  width: 14%;
+}
+
+table.matrix-table td.dim-name {
+  font-weight: 800;
+  background: var(--surface-alt);
+  color: var(--primary);
+}
+
+.cell-head {
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.cell-detail {
+  font-size: 0.84rem;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+}
+
+.cell-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.cell-meta a {
+  color: var(--teal);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.dim-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.dim-card-head {
+  padding: 10px 12px;
+  background: #edf5f0;
+  font-weight: 800;
+  color: var(--primary);
+  border-bottom: 1px solid var(--line);
+}
+
+.dim-card-row {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dim-card-row:last-child {
+  border-bottom: 0;
+}
+
+.dim-card-row[data-strat="A"] {
+  border-left: 4px solid var(--strat-a);
+}
+
+.dim-card-row[data-strat="B"] {
+  border-left: 4px solid var(--strat-b);
+  background: #fafdfb;
+}
+
+.dim-card-row[data-strat="C"] {
+  border-left: 4px solid var(--strat-c);
+  background: #fffdf7;
+}
+
+.strat-mini-tag {
+  font-size: 0.8rem;
+  font-weight: 800;
+  margin-bottom: 3px;
+}
+
+.calendar-grid {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fcfefd;
+  margin-top: 14px;
+}
+
+.cal-note {
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+  margin: 6px 0 0;
+}
+

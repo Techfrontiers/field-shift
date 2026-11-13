@@ -69,6 +69,203 @@
       textureEn: "Loam",
       surface0to5: { siltPct: 47.0, clayPct: 23.8, sandPct: 29.3, ph: 6.1, socPct: 2.09 },
       sub5to15: { siltPct: 46.2, clayPct: 25.0, sandPct: 28.8, ph: 6.1, socPct: 1.23 }
+    },
+    dimensions: [
+      { id: "yield", th: "1. ผลผลิต", en: "1. Yield" },
+      { id: "water", th: "2. การใช้น้ำ", en: "2. Water Use" },
+      { id: "income", th: "3. รายได้เสริม", en: "3. Extra Income" },
+      { id: "soil", th: "4. สุขภาพดิน", en: "4. Soil Health" },
+      { id: "risk", th: "5. ความเสี่ยง", en: "5. Risk" }
+    ],
+    strategies: {
+      A: {
+        id: "A",
+        color: "#475569",
+        bg: "#f1f5f9",
+        titleTh: "A — ข้าวเดี่ยว (ปัจจุบัน)",
+        titleEn: "A — Rice Only (Current)",
+        cropTh: "ข้าวนาปีอย่างเดียว (พ.ค.–ต.ค.) แล้วปล่อยว่าง พ.ย.–เม.ย.",
+        cropEn: "Wet-season rice only (May–Oct), fallow during Nov–Apr",
+        durationTh: "ข้าว ~120–150 วัน · แล้งว่าง",
+        durationEn: "Rice ~120–150 d · Dry fallow",
+        waterTargetMm: 0,
+        scores: { yield: 2, water: 5, income: 1, soil: 2, risk: 4 },
+        cells: {
+          yield: {
+            headlineTh: "ข้าว 1 รอบ/ปี (ไม่มีผลผลิตช่วงแล้ง)",
+            headlineEn: "1 rice crop/yr (no dry-season harvest)",
+            detailTh: "ปลูกเฉพาะข้าวนาปีตามฝน พ.ค.–ต.ค. ไม่ได้ผลผลิตเสริมในฤดูแล้ง",
+            detailEn: "Only wet-season rice (May–Oct); dry season stays bare.",
+            badgeType: "real",
+            sourceTh: "ลักษณะแปลงสังเกตการณ์ (README/PLAN)",
+            sourceEn: "Observed field pattern (README/PLAN)"
+          },
+          water: {
+            headlineTh: "ใช้น้ำแล้ง 0 มม. (พึ่งฝน 1,070–1,250 มม.)",
+            headlineEn: "0 mm dry-season water (rainfed May–Oct)",
+            detailTh: "ไม่เพิ่มภาระใช้น้ำช่วง พ.ย.–ก.พ. ที่ฝนมีแค่ 28.8 มม. (2024)",
+            detailEn: "Zero extra demand during Nov–Feb when 2024 rain was just 28.8 mm.",
+            badgeType: "real",
+            sourceTh: "NASA POWER (data/power_daily_2024.json)",
+            sourceEn: "NASA POWER (data/power_daily_2024.json)"
+          },
+          income: {
+            headlineTh: "0 บาท (ไม่มีรายได้ช่วงแล้ง)",
+            headlineEn: "0 THB (no dry-season cash crop)",
+            detailTh: "ไม่มีรายได้เพิ่มหลังเกี่ยวข้าว และไม่ต้องลงทุนเมล็ดพันธุ์/ไถหว่านรอบแล้ง",
+            detailEn: "No dry-season cash revenue and zero off-season input spending.",
+            badgeType: "official",
+            sourceTh: "ฐานเปรียบเทียบ (Baseline)",
+            sourceEn: "Baseline assumption"
+          },
+          soil: {
+            headlineTh: "ดินร่วนคงเดิม/อาจโทรมลงถ้าเผาตอซัง",
+            headlineEn: "Neutral to declining if stubble is burned",
+            detailTh: "ไม่มีพืชคลุมดินหรือปมถั่วเติม N; ดินชั้น 5–15 ซม. มีอินทรีย์คาร์บอนเพียง 1.23%",
+            detailEn: "No cover canopy or legume N; 5–15 cm SoilGrids SOC stays low at 1.23%.",
+            badgeType: "real",
+            sourceTh: "SoilGrids v2 (data/soilgrid.json)",
+            sourceEn: "SoilGrids v2 (data/soilgrid.json)"
+          },
+          risk: {
+            headlineTh: "ต่ำสุดด้านภัยแล้งหน้าแล้ง (แต่พึ่งรายได้ทางเดียว)",
+            headlineEn: "Lowest dry-season water risk (single income)",
+            detailTh: "ไม่เสี่ยงเมล็ดตายเพราะแล้ง แต่เสี่ยงฝนต้นฤดูมาช้า (เช่น 6 พ.ค. 2024) และรายได้ทางเดียว",
+            detailEn: "No dry-season crop failure risk, but single-crop exposure if May rains delay.",
+            badgeType: "real",
+            sourceTh: "NASA POWER 2024 (onset 6 พ.ค.)",
+            sourceEn: "NASA POWER 2024 (6 May onset)"
+          }
+        }
+      },
+      B: {
+        id: "B",
+        color: "#15803d",
+        bg: "#ecfdf5",
+        titleTh: "B — ข้าว + ถั่วเขียว (ชัยนาท 84-1)",
+        titleEn: "B — Rice + Mungbean (Chai Nat 84-1)",
+        cropTh: "ข้าว (พ.ค.–ต.ค.) → ถั่วเขียวผิวมัน ชัยนาท 84-1 (15 พ.ย.–ม.ค.)",
+        cropEn: "Rice (May–Oct) → Chai Nat 84-1 mungbean (mid-Nov–late Jan)",
+        durationTh: "~65 วัน (ออกดอก ~35 วัน)",
+        durationEn: "~65 days (flower ~35 d)",
+        waterTargetMm: 235,
+        scores: { yield: 5, water: 2, income: 5, soil: 3, risk: 2 },
+        cells: {
+          yield: {
+            headlineTh: "ข้าว + ถั่วเขียว ~153 กก./ไร่ [ค่าประมาณฐาน]",
+            headlineEn: "Rice + ~153 kg/rai mungbean [Est. farmer avg]",
+            detailTh: "แปลงเกษตรกรจริง สศก. ~151–155 กก./ไร่ (ตัวอย่าง 68/69 = 153 กก./ไร่); แปลงทดลอง DOA 226 กก./ไร่",
+            detailEn: "OAE farmer avg ~151–155 kg/rai (2568/69 = 153 kg/rai); DOA trial ceiling 226 kg/rai.",
+            badgeType: "estimate",
+            sourceTh: "สศก. 2568/69 & กรมวิชาการเกษตร",
+            sourceEn: "OAE 2568/69 & DOA Chai Nat",
+            sourceUrl: "https://zone11.oae.go.th/news-press/4781/"
+          },
+          water: {
+            headlineTh: "ต้องใช้น้ำ 350–400 ลบ.ม./ไร่ (~219–250 มม.)",
+            headlineEn: "Needs 350–400 m³/rai (~219–250 mm)",
+            detailTh: "ต้องมีน้ำชลประทาน/น้ำเสริม 2–3 ครั้ง (ทุก 10–14 วัน) เพราะฝน พ.ย.–ม.ค. 2024 มีแค่ 28.4 มม. [ขาดสุทธิ ~100–170 มม. ค่าประมาณ]",
+            detailEn: "Requires 2–3 supplemental irrigations (every 10–14 d); Nov–Jan 2024 rain is only 28.4 mm [Est. 100–170 mm gap].",
+            badgeType: "official",
+            sourceTh: "กรมการข้าว (RKB) + NASA POWER 2024",
+            sourceEn: "Rice Knowledge Bank + NASA POWER 2024",
+            sourceUrl: "https://rkb.ricethailand.go.th/web/content_page.php?code=A-BMDHI8JJCZ"
+          },
+          income: {
+            headlineTh: "กำไรสุทธิ ~1,156 บาท/ไร่ [ค่าประมาณจาก สศก.]",
+            headlineEn: "Net ~1,156 THB/rai [OAE benchmark est.]",
+            detailTh: "ขายหน้าฟาร์มเฉลี่ย ~23 บาท/กก. (ช่วง 21–25 บ.) หักต้นทุน ~2,363 บาท/ไร่; แป้งสูง 54.85% ตลาดวุ้นเส้นรับซื้อ",
+            detailEn: "Farmgate ~23 THB/kg (21–25 range) minus ~2,363 THB/rai cost; 54.85% starch favored by vermicelli mills.",
+            badgeType: "estimate",
+            sourceTh: "สศก. ข่าว 6/2569 (ม.ค. 2569)",
+            sourceEn: "OAE Press 6/2569 (Jan 2026)",
+            sourceUrl: "https://zone11.oae.go.th/news-press/4781/"
+          },
+          soil: {
+            headlineTh: "เหลือ N คืนดิน ~2.0–6.0 กก.N/ไร่ + ตัดวงจรศัตรูพืช",
+            headlineEn: "Leaves ~2.0–6.0 kg N/rai residue + pest break",
+            detailTh: "เหมาะกับดิน pH 6.1 ของแปลง; คลุกไรโซเบียมลดปุ๋ย N ในถั่วเขียว 50–100% แต่ N ส่วนใหญ่ออกไปกับเมล็ด",
+            detailEn: "Fits field pH 6.1; Rhizobium cuts mungbean N fertilizer 50–100%, though harvested grain exports much of fixed N.",
+            badgeType: "official",
+            sourceTh: "กรมวิชาการเกษตร (i5.pdf)",
+            sourceEn: "DOA Soil Microbiology (i5.pdf)",
+            sourceUrl: "https://www.doa.go.th/apsrdo/wp-content/uploads/2020/02/i5.pdf"
+          },
+          risk: {
+            headlineTh: "เสี่ยงขาดน้ำช่วงออกดอก + ร้อน >40°C ถ้าหว่านช้า",
+            headlineEn: "Flowering drought stress + >40°C heat if sown late",
+            detailTh: "ห้ามขาดน้ำวันที่ ~30–50; ต้องหว่าน พ.ย. ให้จบก่อนร้อน 42.9°C มี.ค.–พ.ค. (หากแล้งจัดไถกลบเป็นปุ๋ยสดแทนได้)",
+            detailEn: "Critical pod/flower window days 30–50; must sow in Nov to finish before 42.9°C Mar–May heat.",
+            badgeType: "official",
+            sourceTh: "กรมการข้าว & PMC10308031 + POWER",
+            sourceEn: "Rice Dept, PMC10308031 & POWER"
+          }
+        }
+      },
+      C: {
+        id: "C",
+        color: "#b45309",
+        bg: "#fffbeb",
+        titleTh: "C — ข้าว + ปอเทือง (พืชคลุมดินทนแล้ง)",
+        titleEn: "C — Rice + Sunn Hemp (Drought Cover Crop)",
+        cropTh: "ข้าว (พ.ค.–ต.ค.) → ปอเทือง Crotalaria juncea (50–60 วัน ไถกลบ พ.ย.–ต้น ม.ค.)",
+        cropEn: "Rice (May–Oct) → Sunn hemp C. juncea (50–60 d plough-in Nov–early Jan)",
+        durationTh: "50–60 วัน (โหมดหลัก) · 120–150 วัน (เก็บเมล็ด)",
+        durationEn: "50–60 d (cover mode) · 120–150 d (seed mode)",
+        waterTargetMm: 60,
+        scores: { yield: 3, water: 4, income: 2, soil: 5, risk: 3 },
+        cells: {
+          yield: {
+            headlineTh: "ชีวมวลสด 1.5–3.0 ตัน/ไร่ + ลุ้นข้าวเพิ่ม 15–23% [แปลงสาธิต]",
+            headlineEn: "1.5–3.0 t/rai biomass + demo +15–23% next rice",
+            detailTh: "โหมดหลักไถกลบไม่ขายผลผลิต (หรือโหมดเสริมเก็บเมล็ด 120–150 วัน ได้ ~80–120 กก./ไร่); ผลข้าวเพิ่มเป็นข้อมูลแปลงสาธิต",
+            detailEn: "Plough-in mode yields organic biomass (optional 120–150 d seed mode yields 80–120 kg/rai); rice boost from LDD demos.",
+            badgeType: "official",
+            sourceTh: "กรมพัฒนาที่ดิน (bib10499f & รายงานสาธิต)",
+            sourceEn: "LDD Thailand (bib10499f & demo report)",
+            sourceUrl: "https://e-library.ldd.go.th/library/flip/bib10499f/files/basic-html/page6.html"
+          },
+          water: {
+            headlineTh: "ใช้น้ำน้อยกว่า B: อาศัยความชื้นตกค้าง พ.ย. (+อาจรดงอก 1 ครั้ง)",
+            headlineEn: "Lower water than B: Nov soil moisture (+1 start watering if dry)",
+            detailTh: "รากแก้วลึกทนแล้ง (รอดได้ถึง 170–300 มม./ปี; เต็มที่ 25 มม./สัปดาห์ ≈ 180–215 มม.); หากดินแห้งใน ธ.ค. ต้องน้ำช่วยงอก ~20–30 มม. [ค่าประมาณ]",
+            detailEn: "Deep taproot tolerates drought (optimal ~25 mm/wk ≈ 180–215 mm); sow in Nov damp soil or apply ~20–30 mm start irrigation [Est.].",
+            badgeType: "estimate",
+            sourceTh: "Feedipedia / Tropical Forages + NASA POWER",
+            sourceEn: "Feedipedia / Tropical Forages + POWER",
+            sourceUrl: "https://www.feedipedia.org/node/313"
+          },
+          income: {
+            headlineTh: "0 บาทสด (โหมดคลุมดิน) — แต่ประหยัดยูเรีย ~15 กก./ไร่",
+            headlineEn: "0 THB cash (cover mode) — saves ~15 kg/rai urea",
+            detailTh: "เมล็ดขอรับ/ยืมฟรีที่สถานีพัฒนาที่ดินพิษณุโลก (ซื้อเอง ~25–35 บ./กก.); ถ้าเลือกโหมดเก็บเมล็ด 120–150 วัน ราคารับซื้อคืน LDD ~16–20 บ./กก. [ค่าประมาณ]",
+            detailEn: "Free/loan seed via LDD Phitsanulok (retail ~25–35 THB/kg); optional 120–150 d seed buyback ~16–20 THB/kg [Est.].",
+            badgeType: "estimate",
+            sourceTh: "สกษ.สมุทรสาคร / สพข.5 กรมพัฒนาที่ดิน",
+            sourceEn: "OPSMOAC / LDD Region 5",
+            sourceUrl: "https://www.opsmoac.go.th/samutsakhon-local_wisdom-preview-421691791873"
+          },
+          soil: {
+            headlineTh: "ดีที่สุด: คืน N ~10–20 กก./ไร่ + อุ้มความชื้นดิน + กดไส้เดือนฝอย",
+            headlineEn: "Strongest: +10–20 kg N/rai + moisture sponge + nematode break",
+            detailTh: "ตรวจแล็บ 50 วันเท่าปุ๋ยยูเรีย 15 กก./ไร่ (~6.9 กก.N; ช่วงกว้าง LDD 10–20 กก./ไร่) ปิดผิวดินลดระเหยและเติมคาร์บอนให้ชั้น 5–15 ซม. (1.23%)",
+            detailEn: "Lab test at 50 d equals 15 kg/rai urea (LDD range 10–20 kg N/rai), shades loam to cut evaporation, boosts 5–15 cm SOC (1.23%).",
+            badgeType: "official",
+            sourceTh: "กรมพัฒนาที่ดิน & Feedipedia + SoilGrids",
+            sourceEn: "LDD & Feedipedia + SoilGrids",
+            sourceUrl: "https://e-library.ldd.go.th/library/flip/bib10499f/files/basic-html/page6.html"
+          },
+          risk: {
+            headlineTh: "เสี่ยงเมล็ดไม่งอกถ้าหว่านช้าตอนดินแห้ง + ห้ามน้ำขัง >2 วัน",
+            headlineEn: "Poor germination if sown late in dry Dec + zero waterlogging tolerance",
+            detailTh: "ต้องระบายน้ำนาก่อนหว่าน (น้ำท่วมขัง >2 วันรากเน่า); โหมดหลักไม่มีเงินสดเข้ากระเป๋าทันทีเหมือนขายถั่วเขียว",
+            detailEn: "Must drain paddy before sowing (>2 days standing water kills plants); no immediate grain cash in cover mode.",
+            badgeType: "official",
+            sourceTh: "กรมพัฒนาที่ดิน & Tropical Forages",
+            sourceEn: "LDD & Tropical Forages"
+          }
+        }
+      }
     }
   };
 

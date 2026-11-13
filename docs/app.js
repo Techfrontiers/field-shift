@@ -49,6 +49,16 @@
       openOsm: "เปิดใน OpenStreetMap",
       limitsTitle: "ข้อจำกัดของข้อมูลที่ต้องบอกตรงๆ:",
       limitsBody: "NASA POWER ใช้ข้อมูลกริดระดับ ~50 กม. (เป็นค่าภาพรวมพื้นที่ ไม่ใช่เครื่องวัดฝนในแปลงโดยตรง) และ SoilGrids เป็นข้อมูลประเมินเชิงพื้นที่ 250 ม. เครื่องมือนี้เปรียบเทียบทางเลือกจากอดีต — ไม่สามารถพยากรณ์อากาศปีหน้าหรือรับประกันผลผลิตได้",
+      s2Title: "2. เปรียบเทียบ 3 กลยุทธ์ (Slice 2)",
+      s2Desc: "ข้าวนาปีเป็นพืชหลักเหมือนกันทั้ง 3 แนวทาง ต่างกันเฉพาะการจัดการช่วงฤดูแล้ง พ.ย.–เม.ย. (ทุกช่องระบุแหล่งที่มาชัด — ยังไม่มีคะแนนรวมจนกว่าคุณจะเลือกน้ำหนักในขั้นถัดไป)",
+      s2DimHeader: "ด้านที่เปรียบเทียบ",
+      s2WaterTitle: "ฝนจริงรายเดือน vs ความต้องการน้ำช่วงฤดูแล้ง (พ.ย.–เม.ย.)",
+      s2WaterCaption: "ฝน พ.ย.–ม.ค. 2024 รวมแค่ 28.4 มม. (25 ปีเฉลี่ย ~39.6 มม.) — ถั่วเขียวชัยนาท 84-1 ต้องการน้ำทั้งฤดู ~219–250 มม. (350–400 ลบ.ม./ไร่) จึงต้องให้น้ำเสริม 2–3 ครั้ง ส่วนปอเทืองโหมดคลุมดิน 50–60 วันอาศัยความชื้นดินตกค้างหลังนาเป็นหลัก (อาจช่วยงอก 1 ครั้งหากดินแห้ง)",
+      s2CalTitle: "ปฏิทินฤดูกาล 12 เดือน (ข้าวหลัก พ.ค.–ต.ค. + พืชหลังนา พ.ย.–เม.ย.)",
+      s2CalCaption: "ทั้ง B (65 วัน) และ C (โหมดคลุมดิน 50–60 วัน) จบก่อนมี.ค.–เม.ย. ที่อากาศร้อนสุด 42.9°C และเว้นพักแปลงหลายเดือนก่อนฝน พ.ค. จึงไม่แย่งน้ำกับข้าว",
+      s2NoScoreNote: "หมายเหตุ: หน้านี้ไม่แสดง \"คะแนนรวม\" หรือบอกว่าทางไหนดีที่สุด เพราะคำว่าดีกว่าขึ้นกับความสำคัญของชาวนาแต่ละแปลง (ไปกำหนดในส่วนที่ 3 ด้านล่าง)",
+      badgeOfficial: "ข้อมูลราชการ/วิชาการ",
+      badgeEstimate: "ค่าประมาณ/สมมติฐาน",
       footer: "FieldShift · NASA Space Apps Challenge 2026 (Challenge 7: Field Shift) · ข้อมูลฝังในหน้าเว็บ ไม่เรียก API ภายนอกตอนใช้งาน"
     },
     en: {
@@ -91,6 +101,16 @@
       openOsm: "Open OpenStreetMap",
       limitsTitle: "Plain-spoken data limitations:",
       limitsBody: "NASA POWER represents a ~50 km grid cell (not an on-farm rain gauge) and SoilGrids is a 250 m spatial estimate. This tool compares historical patterns — it never forecasts next season's weather or guarantees yields.",
+      s2Title: "2. Compare 3 Strategies (Slice 2)",
+      s2Desc: "Rainy-season rice remains the main crop in all 3 strategies; options differ only in Nov–Apr dry-season management. Every cell cites its source — NO single score is shown before you choose your priorities below.",
+      s2DimHeader: "Dimension",
+      s2WaterTitle: "Dry-Season Rainfall vs Crop Water Demand (Nov–Apr)",
+      s2WaterCaption: "Nov–Jan 2024 rainfall totaled just 28.4 mm (~39.6 mm 25y norm). Chai Nat 84-1 mungbean needs ~219–250 mm (350–400 m³/rai) across 65 days, requiring 2–3 irrigations. Sunn hemp cover (50–60 d) relies mostly on Nov post-rice soil moisture (+1 light start watering if dry).",
+      s2CalTitle: "Unified 12-Month Crop Calendar (Main Rice May–Oct + Dry-Season Nov–Apr)",
+      s2CalCaption: "Both B (65 d mungbean) and C (50–60 d cover plough-in) finish by Feb/Jan — safely avoiding the Mar–Apr >40°C heat spike (up to 42.9°C) and leaving months before May rice.",
+      s2NoScoreNote: "No composite score is shown here: what counts as \"better\" depends on each farmer's own priorities in Section 3 below.",
+      badgeOfficial: "Official / Research",
+      badgeEstimate: "Estimate / Assumption",
       footer: "FieldShift · NASA Space Apps Challenge 2026 (Challenge 7: Field Shift) · Static offline-first web app with embedded datasets"
     }
   };
@@ -330,19 +350,245 @@
     '</section>';
   }
 
-  function renderPlaceholders() {
-    var s2 = state.lang === "th"
-      ? '<section class="section-card" id="slice-2"><h2>2. เทียบ 3 กลยุทธ์ (กำลังสร้างใน Slice 2)</h2><p class="section-desc">ตาราง 5 ด้าน กราฟเทียบน้ำฝน vs ความต้องการน้ำ และปฏิทิน 12 เดือน</p></section>'
-      : '<section class="section-card" id="slice-2"><h2>2. Compare 3 Strategies (Slice 2 pending)</h2><p class="section-desc">5-dimension sourced table, water chart, and 12-month timeline.</p></section>';
-    var s3 = state.lang === "th"
+  function badgeFor(type) {
+    if (type === "real") {
+      return '<span class="badge badge-real">' + esc(t("badgeReal")) + '</span>';
+    }
+    if (type === "official") {
+      return '<span class="badge badge-official">' + esc(t("badgeOfficial")) + '</span>';
+    }
+    return '<span class="badge badge-estimate">' + esc(t("badgeEstimate")) + '</span>';
+  }
+
+  function renderCellContent(cell) {
+    var lang = state.lang;
+    var headline = lang === "th" ? cell.headlineTh : cell.headlineEn;
+    var detail = lang === "th" ? cell.detailTh : cell.detailEn;
+    var src = lang === "th" ? cell.sourceTh : cell.sourceEn;
+    var srcHtml = cell.sourceUrl
+      ? '<a href="' + cell.sourceUrl + '" target="_blank" rel="noopener noreferrer">' + esc(src) + '</a>'
+      : '<span>' + esc(src) + '</span>';
+
+    return '<div class="cell-head">' + esc(headline) + '</div>' +
+      '<div class="cell-detail">' + esc(detail) + '</div>' +
+      '<div class="cell-meta">' + badgeFor(cell.badgeType) + ' ' + srcHtml + '</div>';
+  }
+
+  function renderWaterCompareSvg() {
+    var w = 720;
+    var h = 235;
+    var padL = 52;
+    var padR = 20;
+    var padT = 26;
+    var padB = 42;
+    var plotW = w - padL - padR;
+    var plotH = h - padT - padB;
+    var dryIdx = [10, 11, 0, 1, 2, 3]; // Nov -> Apr
+    var is2024 = state.climateMode === "2024";
+    var maxY = 120;
+
+    function yVal(v) {
+      return padT + plotH - (Math.min(v, maxY) / maxY) * plotH;
+    }
+
+    var grid = [0, 30, 60, 90, 120].map(function (v) {
+      var y = yVal(v).toFixed(1);
+      return '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="#e2ece6" stroke-dasharray="3,3" />' +
+        '<text x="' + (padL - 6) + '" y="' + (+y + 4) + '" text-anchor="end" font-size="10.5" fill="#4b6159">' + v + '</text>';
+    }).join("");
+
+    // Approximate monthly water need spread during active dry-season crop (comparative only)
+    // B (Chai Nat 84-1, 65 d Nov 15 - Jan 19): ~235 mm split across Nov (~70), Dec (~110), Jan (~55)
+    // C (Sunn hemp cover 50-60 d Nov - early Jan): relies mostly on residual moisture; shown is ~25 mm/wk optimal reference capped as ~75 Nov / ~95 Dec or residual
+    var needB = [70, 110, 55, 0, 0, 0];
+    var needCEst = [25, 0, 0, 0, 0, 0]; // Estimated 1 optional germination watering if soil dry; taproot + soil moisture handles rest
+
+    var colW = plotW / 6;
+    var bw = 18;
+    var shapes = [];
+
+    dryIdx.forEach(function (mIdx, idx) {
+      var m = DATA.monthly[mIdx];
+      var rain = is2024 ? m.d2024RainMonth : m.climRainMonth;
+      var cx = padL + colW * (idx + 0.5);
+
+      var items = [
+        { val: rain, x: cx - bw * 1.55, fill: "#0284c7" },
+        { val: needB[idx], x: cx - bw * 0.45, fill: "#15803d" },
+        { val: needCEst[idx], x: cx + bw * 0.65, fill: "#d97706" }
+      ];
+
+      items.forEach(function (it) {
+        if (it.val <= 0) return;
+        var y = yVal(it.val);
+        var bh = Math.max(2, padT + plotH - y);
+        shapes.push(
+          '<rect x="' + it.x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + bw + '" height="' + bh.toFixed(1) + '" rx="3" fill="' + it.fill + '"></rect>' +
+          '<text x="' + (it.x + bw / 2).toFixed(1) + '" y="' + (y - 3).toFixed(1) + '" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0f1f1a">' + Math.round(it.val) + '</text>'
+        );
+      });
+
+      var mLabel = state.lang === "th" ? m.th : m.en;
+      shapes.push('<text x="' + cx.toFixed(1) + '" y="' + (h - 14) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#1f352e">' + esc(mLabel) + '</text>');
+    });
+
+    var legendRain = state.lang === "th" ? (is2024 ? "ฝนจริงปี 2024 (มม.)" : "ฝนเฉลี่ย 25 ปี (มม.)") : (is2024 ? "2024 Rain (mm)" : "25y Norm Rain (mm)");
+    var legendB = state.lang === "th" ? "น้ำที่ถั่วเขียว B ต้องการรวม ~235 มม. [ช่วง 65 วัน]" : "Mungbean B demand (~235 mm over 65 d)";
+    var legendC = state.lang === "th" ? "ปอเทือง C (ใช้ความชื้นดิน + อาจช่วยงอก ~25 มม. ค่าประมาณ)" : "Sunn Hemp C (soil moisture + ~25 mm est. start)";
+
+    return '<div class="chart-box">' +
+      '<div class="chart-header"><span class="chart-title">' + esc(t("s2WaterTitle")) + '</span></div>' +
+      '<div class="chart-legend">' +
+        '<span class="legend-item"><span class="swatch" style="background:#0284c7"></span>' + esc(legendRain) + '</span>' +
+        '<span class="legend-item"><span class="swatch" style="background:#15803d"></span>' + esc(legendB) + '</span>' +
+        '<span class="legend-item"><span class="swatch" style="background:#d97706"></span>' + esc(legendC) + '</span>' +
+      '</div>' +
+      '<svg class="svg-chart" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="Dry season rainfall vs crop water demand">' +
+        '<text x="' + padL + '" y="14" font-size="10.5" font-weight="700" fill="#4b6159">mm / month</text>' +
+        grid + shapes.join("") +
+      '</svg>' +
+      '<p class="cal-note">' + esc(t("s2WaterCaption")) + '</p>' +
+    '</div>';
+  }
+
+  function renderCalendarSvg() {
+    var w = 720;
+    var h = 210;
+    var padL = 112;
+    var padR = 16;
+    var plotW = w - padL - padR;
+    var colW = plotW / 12;
+    // Crop-year order: May (4) -> Apr (3)
+    var order = [4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2, 3];
+    var isTh = state.lang === "th";
+
+    // Heat danger background over Mar (col 10) and Apr (col 11)
+    var heatX = padL + colW * 10;
+    var heatBox = '<rect x="' + heatX.toFixed(1) + '" y="26" width="' + (colW * 2).toFixed(1) + '" height="148" fill="#fee2e2" opacity="0.65" rx="4" />' +
+      '<text x="' + (heatX + colW).toFixed(1) + '" y="190" text-anchor="middle" font-size="10" font-weight="800" fill="#b91c1c">' +
+      esc(isTh ? "ร้อนจัด 38–42.9°C" : "Extreme heat 38–42.9°C") + '</text>';
+
+    var monthHeaders = order.map(function (mIdx, col) {
+      var m = DATA.monthly[mIdx];
+      var x = padL + colW * (col + 0.5);
+      var lbl = isTh ? m.th : m.en;
+      return '<text x="' + x.toFixed(1) + '" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#0f1f1a">' + esc(lbl) + '</text>' +
+        '<line x1="' + (padL + colW * col).toFixed(1) + '" y1="26" x2="' + (padL + colW * col).toFixed(1) + '" y2="174" stroke="#e2ece6" />';
+    }).join("");
+
+    var rows = [
+      {
+        y: 42,
+        label: isTh ? "A: ข้าวเดี่ยว" : "A: Rice only",
+        labelColor: "#475569",
+        bars: [
+          { startCol: 0, span: 6, fill: "#0d9488", txt: isTh ? "ข้าวนาปี (พ.ค.–ต.ค.)" : "Main Rice (May–Oct)" },
+          { startCol: 6, span: 6, fill: "#cbd5e1", txtFill: "#334155", txt: isTh ? "ปล่อยว่าง (พ.ย.–เม.ย.)" : "Fallow (Nov–Apr)" }
+        ]
+      },
+      {
+        y: 90,
+        label: isTh ? "B: ข้าว+ถั่วเขียว" : "B: +Mungbean",
+        labelColor: "#15803d",
+        bars: [
+          { startCol: 0, span: 6, fill: "#0d9488", txt: isTh ? "ข้าวนาปี (พืชหลัก)" : "Main Rice" },
+          { startCol: 6.4, span: 2.3, fill: "#16a34a", txt: isTh ? "ชัยนาท 84-1 (65 วัน)" : "CN84-1 (65 d)" },
+          { startCol: 8.7, span: 3.3, fill: "#e2e8f0", txtFill: "#475569", txt: isTh ? "พักแปลง" : "Rest" }
+        ]
+      },
+      {
+        y: 138,
+        label: isTh ? "C: ข้าว+ปอเทือง" : "C: +Sunn Hemp",
+        labelColor: "#b45309",
+        bars: [
+          { startCol: 0, span: 6, fill: "#0d9488", txt: isTh ? "ข้าวนาปี (พืชหลัก)" : "Main Rice" },
+          { startCol: 6.2, span: 1.9, fill: "#d97706", txt: isTh ? "ปอเทือง (50–60 วัน)" : "Sunn Hemp 55d" },
+          { startCol: 8.1, span: 3.9, fill: "#fef3c7", txtFill: "#92400e", txt: isTh ? "ซากคลุมดิน+พักก่อนนา" : "Mulch rest" }
+        ]
+      }
+    ];
+
+    var rowsSvg = rows.map(function (r) {
+      var out = '<text x="' + (padL - 8) + '" y="' + (r.y + 18) + '" text-anchor="end" font-size="11.5" font-weight="800" fill="' + r.labelColor + '">' + esc(r.label) + '</text>';
+      r.bars.forEach(function (b) {
+        var bx = padL + b.startCol * colW + 2;
+        var bw = Math.max(24, b.span * colW - 4);
+        out += '<rect x="' + bx.toFixed(1) + '" y="' + r.y + '" width="' + bw.toFixed(1) + '" height="28" rx="6" fill="' + b.fill + '"></rect>';
+        out += '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (r.y + 18) + '" text-anchor="middle" font-size="10" font-weight="700" fill="' + (b.txtFill || "#ffffff") + '">' + esc(b.txt) + '</text>';
+      });
+      return out;
+    }).join("");
+
+    return '<div class="calendar-grid">' +
+      '<div class="chart-header"><span class="chart-title">' + esc(t("s2CalTitle")) + '</span></div>' +
+      '<svg class="svg-chart" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="12-month crop rotation timeline">' +
+        heatBox + monthHeaders + rowsSvg +
+      '</svg>' +
+      '<p class="cal-note">' + esc(t("s2CalCaption")) + '</p>' +
+    '</div>';
+  }
+
+  function renderSlice2() {
+    var strats = ["A", "B", "C"].map(function (id) { return DATA.strategies[id]; });
+    var isTh = state.lang === "th";
+
+    var chipCards = '<div class="strat-banner-grid">' + strats.map(function (st) {
+      return '<div class="strat-chip-card" data-strat="' + st.id + '">' +
+        '<h3>' + esc(isTh ? st.titleTh : st.titleEn) + '</h3>' +
+        '<p>' + esc(isTh ? st.cropTh : st.cropEn) + '</p>' +
+        '<p style="margin-top:4px;font-weight:700;">' + esc(isTh ? st.durationTh : st.durationEn) + '</p>' +
+      '</div>';
+    }).join("") + '</div>';
+
+    var tableRows = DATA.dimensions.map(function (dim) {
+      var cols = strats.map(function (st) {
+        return '<td>' + renderCellContent(st.cells[dim.id]) + '</td>';
+      }).join("");
+      return '<tr><td class="dim-name">' + esc(isTh ? dim.th : dim.en) + '</td>' + cols + '</tr>';
+    }).join("");
+
+    var desktopTable = '<div class="matrix-table-wrap">' +
+      '<table class="matrix-table">' +
+        '<thead><tr><th class="col-dim">' + esc(t("s2DimHeader")) + '</th>' +
+        strats.map(function (st) { return '<th>' + esc(isTh ? st.titleTh : st.titleEn) + '</th>'; }).join("") +
+        '</tr></thead>' +
+        '<tbody>' + tableRows + '</tbody>' +
+      '</table>' +
+    '</div>';
+
+    var mobileCards = '<div class="matrix-cards">' + DATA.dimensions.map(function (dim) {
+      var rows = strats.map(function (st) {
+        return '<div class="dim-card-row" data-strat="' + st.id + '">' +
+          '<div class="strat-mini-tag" style="color:' + st.color + '">' + esc(isTh ? st.titleTh : st.titleEn) + '</div>' +
+          renderCellContent(st.cells[dim.id]) +
+        '</div>';
+      }).join("");
+      return '<div class="dim-card"><div class="dim-card-head">' + esc(isTh ? dim.th : dim.en) + '</div>' + rows + '</div>';
+    }).join("") + '</div>';
+
+    return '<section class="section-card" id="slice-2">' +
+      '<div class="section-head">' +
+        '<div>' +
+          '<h2>' + esc(t("s2Title")) + '</h2>' +
+          '<p class="section-desc">' + esc(t("s2Desc")) + '</p>' +
+        '</div>' +
+      '</div>' +
+      chipCards + desktopTable + mobileCards +
+      renderWaterCompareSvg() +
+      renderCalendarSvg() +
+      '<div class="callout callout-info">' + esc(t("s2NoScoreNote")) + '</div>' +
+    '</section>';
+  }
+
+  function renderSlice3Placeholder() {
+    return state.lang === "th"
       ? '<section class="section-card" id="slice-3"><h2>3. เลือกความสำคัญของชาวนา (กำลังสร้างใน Slice 3)</h2><p class="section-desc">จัดอันดับตามน้ำหนักความต้องการ + คำอธิบายและโหมดถ้าเปลี่ยนใจ</p></section>'
       : '<section class="section-card" id="slice-3"><h2>3. Farmer Priorities (Slice 3 pending)</h2><p class="section-desc">Interactive sliders, ranking explanation, and sensitivity view.</p></section>';
-    return s2 + s3;
   }
 
   function renderAll() {
     renderTopbar();
-    document.getElementById("app").innerHTML = renderSlice1() + renderPlaceholders();
+    document.getElementById("app").innerHTML = renderSlice1() + renderSlice2() + renderSlice3Placeholder();
     document.getElementById("site-footer").textContent = t("footer");
 
     var cmodeBtns = document.querySelectorAll("[data-cmode]");
