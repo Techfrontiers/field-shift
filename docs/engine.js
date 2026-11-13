@@ -13,13 +13,13 @@
       id: "cash",
       labelTh: "เน้นรายได้เสริม (มีน้ำเสริม)",
       labelEn: "Cash Income (Have Water)",
-      weights: { yield: 4, water: 2, income: 5, soil: 2, risk: 2 }
+      weights: { yield: 4, water: 3, income: 5, soil: 3, risk: 2 }
     },
     {
       id: "drought",
-      labelTh: "แล้งมาก / ห่วงเรื่องน้ำที่สุด",
-      labelEn: "Water-Scarce / Minimize Risk",
-      weights: { yield: 1, water: 5, income: 1, soil: 3, risk: 5 }
+      labelTh: "ไม่มีน้ำเสริมเลย / เน้นปลอดภัยไม่เสี่ยง",
+      labelEn: "Zero Irrigation / Minimize Risk",
+      weights: { yield: 1, water: 5, income: 1, soil: 1, risk: 5 }
     },
     {
       id: "soil",

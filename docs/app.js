@@ -164,7 +164,6 @@
   }
 
   function renderTopbar() {
-    var fieldName = state.lang === "th" ? DATA.field.nameTh : DATA.field.nameEn;
     document.getElementById("topbar").innerHTML =
       '<div class="container">' +
         '<div class="topbar-row">' +
@@ -176,7 +175,7 @@
             '</div>' +
             '<div>' +
               '<h1>' + esc(t("title")) + '</h1>' +
-              '<p class="brand-sub">' + esc(t("subtitle")) + ' · ' + esc(fieldName) + '</p>' +
+              '<p class="brand-sub">' + esc(t("subtitle")) + '</p>' +
             '</div>' +
           '</div>' +
           '<div class="topbar-controls">' +
